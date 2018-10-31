@@ -1,4 +1,5 @@
 
+import com.github.krismorte.menuutil.MenuBar;
 import com.github.krismorte.menuutil.MenuBuilder;
 
 /*
@@ -20,7 +21,7 @@ public class ExmapleJMenu extends javax.swing.JFrame {
         initComponents();
         
         try {
-            MenuBuilder menu = MenuBuilder.getInMemoryInstance("");
+            MenuBar menu = MenuBuilder.getInMemoryInstance("");
             if(menu!=null){
                 System.out.println("Teste.main()");
                 this.setJMenuBar(menu.getFullVersion());

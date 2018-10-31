@@ -1,6 +1,6 @@
 
-import com.github.krismorte.menuutil.annotation.ItemMetodo;
-import com.github.krismorte.menuutil.annotation.MenuClasse;
+import com.github.krismorte.menuutil.annotation.MenuClass;
+import com.github.krismorte.menuutil.annotation.ItemMethod;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -12,11 +12,16 @@ import com.github.krismorte.menuutil.annotation.MenuClasse;
  *
  * @author krisnamourtscf
  */
-@MenuClasse(name = "ARQUIVO:SYBMENU")
+@MenuClass(name = "ARQUIVO:SYBMENU",text = "Arquivo")
 public class MenuTest {
     
-    @ItemMetodo(name = "subitem")
+    @ItemMethod(name = "item",text = "item")
     public void teste1() {
+        System.out.println("subitem");
+    }
+    
+    @ItemMethod(name = "item02:subitem",text = "subitem")
+    public void teste2() {
         System.out.println("subitem");
     }
     

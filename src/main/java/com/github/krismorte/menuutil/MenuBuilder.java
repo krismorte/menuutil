@@ -5,8 +5,6 @@
  */
 package com.github.krismorte.menuutil;
 
-import com.github.krismorte.menuutil.annotation.ItemMetodo;
-import com.github.krismorte.menuutil.annotation.MenuClasse;
 import com.github.krismorte.menuutil.dao.ComponenteMenuDao;
 import com.github.krismorte.menuutil.dao.ItemAcessoDao;
 import com.github.krismorte.menuutil.dao.ItemDao;
@@ -23,6 +21,8 @@ import java.util.Set;
 import javax.persistence.EntityManagerFactory;
 import javax.swing.JMenu;
 import org.reflections.Reflections;
+import com.github.krismorte.menuutil.annotation.MenuClass;
+import com.github.krismorte.menuutil.annotation.ItemMethod;
 
 /**
  *
@@ -39,7 +39,7 @@ public class MenuBuilder {
     private ItemDao itemDao;
     private ItemAcessoDao itemAcessoDao;
     private EntityManagerFactory entityManagerFactory;
-    private List<Class> classes;
+    private static List<Class> classes;
 
     private MenuBuilder(String packgePath, EntityManagerFactory emf) throws Exception {
         isInMemory = false;
@@ -59,10 +59,16 @@ public class MenuBuilder {
         encontraClasses(packgePath);
         inMemoryBar = new MenuBarra();
         inMemoryBar.setName("inMemory");
+        for (Class classe : classes) {
+            MenuClass annotation = (MenuClass) classe.getAnnotation(MenuClass.class);
+            inMemoryBar.add(new JMenu(annotation.text()));
+        }
     }
 
-    public static MenuBuilder getInMemoryInstance(String packgePath) throws Exception {
-        return new MenuBuilder(packgePath);
+    public static MenuBar getInMemoryInstance(String packgePath) throws Exception {
+        classes = new ArrayList<>();
+        encontraClasses(packgePath);
+        return new InMemoryMenuBar(classes);
     }
 
     public static MenuBuilder getInstance(String packgePath, EntityManagerFactory emf) throws Exception {
@@ -139,7 +145,7 @@ public class MenuBuilder {
     private void montaMenu2() throws Exception {
 
         for (Class classe : classes) {
-            MenuClasse menu = (MenuClasse) classe.getAnnotation(MenuClasse.class);
+            MenuClass menu = (MenuClass) classe.getAnnotation(MenuClass.class);
             inMemoryBar.add(new JMenu(menu.name()));
         }
     }
@@ -249,12 +255,12 @@ public class MenuBuilder {
         });
     }
 
-    private void encontraClasses(String packgePath) throws Exception {
+    private static void encontraClasses(String packgePath) throws Exception {
         try {
 
             Reflections reflections = new Reflections(packgePath);
 
-            Set<Class<?>> annotated = reflections.getTypesAnnotatedWith(MenuClasse.class);
+            Set<Class<?>> annotated = reflections.getTypesAnnotatedWith(MenuClass.class);
             for (Class classe : annotated) {
                 classes.add(classe);
             }
@@ -269,7 +275,7 @@ public class MenuBuilder {
         Class classeMenu = null;
         try {
             for (Class classe : classes) {
-                MenuClasse menu = (MenuClasse) classe.getAnnotation(MenuClasse.class);
+                MenuClass menu = (MenuClass) classe.getAnnotation(MenuClass.class);
                 if (menu.name().toUpperCase().equals(menuNome.toUpperCase())) {
                     classeMenu = classe;
                     break;
@@ -288,7 +294,7 @@ public class MenuBuilder {
         Method itemMethod = null;
         try {
             for (Method method : classeMenu.getDeclaredMethods()) {
-                ItemMetodo item = (ItemMetodo) method.getAnnotation(ItemMetodo.class);
+                ItemMethod item = (ItemMethod) method.getAnnotation(ItemMethod.class);
                 if (item.name().toUpperCase().equals(itemNome.toUpperCase())) {
                     itemMethod = method;
                     break;
