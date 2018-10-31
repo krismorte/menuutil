@@ -15,12 +15,12 @@ import com.github.krismorte.menuutil.annotation.ItemMethod;
 @MenuClass(name = "ARQUIVO:SYBMENU",text = "Arquivo")
 public class MenuTest {
     
-    @ItemMethod(name = "item",text = "item")
+    @ItemMethod(order = 0,name = "item",text = "item")
     public void teste1() {
         System.out.println("subitem");
     }
     
-    @ItemMethod(name = "item02:subitem",text = "subitem")
+    @ItemMethod(order = 1,name = "item02:subitem",text = "subitem")
     public void teste2() {
         System.out.println("subitem");
     }

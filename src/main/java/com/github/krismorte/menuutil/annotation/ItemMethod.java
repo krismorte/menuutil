@@ -18,6 +18,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD) //can use in method only.
 public @interface ItemMethod {
     
+    int order() default 0;
     String name() ;
     String text();
     
